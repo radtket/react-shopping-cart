@@ -5,51 +5,23 @@ import { formatPrice } from "../utils";
 
 import { CartIconWrapper, StyledCart } from "../styles/styled-components";
 
-function Cart({ isCartOpen, onClick }) {
+const initalState = {
+  productQuantity: 0,
+  installments: 0,
+  totalPrice: 0,
+  currencyId: "USD",
+  currencyFormat: "$",
+};
+
+function Cart({ isCartOpen, setState, cart }) {
   const {
     productQuantity,
-    currencyFormat,
-    totalPrice = 0,
-    currencyId,
     installments,
-  } = {
-    currencyFormat: "$",
-    currencyId: "USD",
-    installments: 3,
-    productQuantity: 1,
-    totalPrice: 9,
-  };
-
-  const products = [
-    {
-      availableSizes: ["X", "L", "XL", "XXL"],
-      currencyFormat: "$",
-      currencyId: "USD",
-      description: "14/15 s/nº",
-      id: 0,
-      installments: 9,
-      isFreeShipping: true,
-      price: 10.9,
-      sku: 8552515751438644,
-      style: "White T-shirt",
-      title: "Cropped Stay Groovy off white",
-      quantity: 1,
-    },
-    {
-      availableSizes: ["X", "ML", "L"],
-      currencyFormat: "$",
-      currencyId: "USD",
-      description: "",
-      id: 11,
-      installments: 3,
-      isFreeShipping: true,
-      price: 13.25,
-      sku: 39876704341265610,
-      style: "Wine",
-      title: "Basic Cactus White T-shirt",
-      quantity: 1,
-    },
-  ];
+    totalPrice,
+    currencyId,
+    currencyFormat,
+    items,
+  } = cart;
 
   const CartIcon = useCallback(
     ({ isLarge }) => (
@@ -62,7 +34,12 @@ function Cart({ isCartOpen, onClick }) {
 
   return (
     <StyledCart isCartOpen={isCartOpen}>
-      <button type="button" onClick={onClick}>
+      <button
+        type="button"
+        onClick={() => {
+          setState(prev => ({ ...prev, isCartOpen: !prev.isCartOpen }));
+        }}
+      >
         {isCartOpen ? <span>X</span> : <CartIcon />}
       </button>
 
@@ -73,16 +50,39 @@ function Cart({ isCartOpen, onClick }) {
             <span>Cart</span>
           </header>
           <ul>
-            {isEmpty(products) ? (
+            {isEmpty(items) ? (
               <li className="cart-item--empty">
                 Add some products in the cart <br />:
               </li>
             ) : (
-              products.map(
-                ({ title, sku, availableSizes, style, quantity }) => (
+              items.map(p => {
+                const {
+                  title,
+                  sku,
+                  availableSizes,
+                  style,
+                  quantity,
+                  price,
+                  id,
+                } = p;
+
+                return (
                   <li key={sku} className="cart-item">
                     <button
-                      onClick={() => {}}
+                      // onClick={() => {
+                      //   setState(prev => ({
+                      //     ...prev,
+                      //     cart: updateCartTotal(
+                      //       {
+                      //         ...prev.cart,
+                      //         items: prev.cart.items.filter(
+                      //           product => product.id !== id
+                      //         ),
+                      //       },
+                      //       p
+                      //     ),
+                      //   }));
+                      // }}
                       type="button"
                       title="remove product from cart"
                     >
@@ -97,7 +97,7 @@ function Cart({ isCartOpen, onClick }) {
                       </dd>
                     </dl>
                     <div>
-                      <p>$ 10.90</p>
+                      <p>{`${currencyFormat}  ${formatPrice({ price, currencyId })}`}</p>
                       <nav>
                         <button
                           type="button"
@@ -112,21 +112,21 @@ function Cart({ isCartOpen, onClick }) {
                       </nav>
                     </div>
                   </li>
-                )
-              )
+                );
+              })
             )}
           </ul>
 
           <footer>
             <p>SUBTOTAL</p>
             <dl>
-              <dt>{`${currencyFormat} ${formatPrice(totalPrice, currencyId)}`}</dt>
+              <dt>{`${currencyFormat} ${formatPrice({ price: totalPrice, currencyId })}`}</dt>
               <dd>
                 {installments && (
                   <span>
                     {`OR UP TO ${installments} x ${
                       currencyFormat
-                    } ${formatPrice(totalPrice / installments, currencyId)}`}
+                    } ${formatPrice({ price: totalPrice / installments, currencyId })}`}
                   </span>
                 )}
               </dd>
@@ -143,7 +143,15 @@ function Cart({ isCartOpen, onClick }) {
 
 Cart.propTypes = {
   isCartOpen: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
+  setState: PropTypes.func.isRequired,
+  cart: PropTypes.shape({
+    productQuantity: PropTypes.number,
+    installments: PropTypes.number,
+    totalPrice: PropTypes.number,
+    currencyId: PropTypes.string,
+    currencyFormat: PropTypes.string,
+    items: PropTypes.arrayOf(PropTypes.shape({})),
+  }).isRequired,
 };
 
 export default Cart;

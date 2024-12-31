@@ -1,25 +1,26 @@
-import { useMemo } from "react";
 import { BuyButton, Stopper, StyledProduct } from "../styles/styled-components";
-import { formatPrice } from "../utils";
 
-function Product({ product }) {
-  const {
-    sku,
-    title,
-    price,
-    installments,
-    currencyId,
-    currencyFormat,
-    isFreeShipping,
-  } = product;
-
-  const formattedPrice = useMemo(
-    () => formatPrice(price, currencyId),
-    [currencyId, price]
-  );
-
+function Product({
+  currencyFormat,
+  currencyId,
+  installments,
+  isFreeShipping,
+  price,
+  sku,
+  title,
+  handleAddProduct,
+  formattedPrice,
+}) {
   return (
-    <StyledProduct sku={sku} tabIndex={1}>
+    <StyledProduct
+      sku={sku}
+      tabIndex={1}
+      onClick={({ key, code }) => {
+        if (key === "Enter" || code === "Space") {
+          handleAddProduct();
+        }
+      }}
+    >
       {isFreeShipping && <Stopper>Free shipping</Stopper>}
       <figure alt={title} />
       <dl>
@@ -31,7 +32,7 @@ function Product({ product }) {
         </dd>
       </dl>
 
-      <BuyButton onClick={() => {}} tabIndex={-1}>
+      <BuyButton onClick={handleAddProduct} tabIndex={-1}>
         Add to cart
       </BuyButton>
     </StyledProduct>

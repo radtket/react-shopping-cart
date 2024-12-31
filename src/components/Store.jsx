@@ -220,6 +220,14 @@ function Store() {
     products,
     filters: [],
     isCartOpen: false,
+    cart: {
+      productQuantity: 0,
+      installments: 0,
+      totalPrice: 0,
+      currencyId: "USD",
+      currencyFormat: "$",
+      items: [],
+    },
   });
 
   return (
@@ -238,14 +246,9 @@ function Store() {
           }}
         />
 
-        <Products products={state.products} />
+        <Products products={state.products} setState={setState} />
       </TwoColumnGrid>
-      <Cart
-        isCartOpen={state.isCartOpen}
-        onClick={() => {
-          setState(prev => ({ ...prev, isCartOpen: !prev.isCartOpen }));
-        }}
-      />
+      <Cart {...state} setState={setState} />
     </>
   );
 }

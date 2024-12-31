@@ -274,7 +274,9 @@ export const Stopper = styled.div`
   z-index: 1;
 `;
 
-export const CartIconWrapper = styled.figure`
+export const CartIconWrapper = styled.figure.withConfig({
+  shouldForwardProp: prop => !["isLarge"].includes(prop),
+})`
   ${({ theme, isLarge }) => css`
     ${size(isLarge ? "60px" : "50px")};
     position: relative;
