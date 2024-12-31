@@ -1,40 +1,34 @@
-import { useMemo } from "react";
-import { useProducts } from "../context/products";
-import { FilterWrapper } from "../styles/styled-components";
+import PropTypes from "prop-types";
+import { FilterSidebar } from "../styles/styled-components";
 
-const availableSizes = ["XS", "S", "M", "ML", "L", "XL", "XXL"];
+const AVAILABLE_SIZES = ["XS", "S", "M", "ML", "L", "XL", "XXL"];
 
-function Filter() {
-  const { filters, filterProducts } = useProducts();
-
-  const selectedCheckboxes = useMemo(() => new Set(filters), [filters]);
-
+function Filter({ filters, onChange }) {
   return (
-    <FilterWrapper>
-      <h4>Sizes:</h4>
-      {availableSizes.map(label => (
-        <label htmlFor={`checkbox-${label}`} key={label}>
-          <input
-            id={`checkbox-${label}`}
-            checked={selectedCheckboxes.has(label)}
-            data-testid="checkbox"
-            onChange={() => {
-              if (selectedCheckboxes.has(label)) {
-                selectedCheckboxes.delete(label);
-              } else {
-                selectedCheckboxes.add(label);
-              }
-
-              filterProducts(Array.from(selectedCheckboxes));
-            }}
-            type="checkbox"
-            value={label}
-          />
-          <span className="checkmark">{label}</span>
-        </label>
-      ))}
-    </FilterWrapper>
+    <FilterSidebar>
+      <nav>
+        <h4>Sizes:</h4>
+        {AVAILABLE_SIZES.map(label => (
+          <label htmlFor={`checkbox-${label}`} key={label}>
+            <input
+              id={`checkbox-${label}`}
+              checked={filters.includes(label)}
+              data-testid="checkbox"
+              onChange={onChange}
+              type="checkbox"
+              value={label}
+            />
+            <span className="checkmark">{label}</span>
+          </label>
+        ))}
+      </nav>
+    </FilterSidebar>
   );
 }
+
+Filter.propTypes = {
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default Filter;

@@ -15,7 +15,7 @@ export const TwoColumnGrid = styled.main`
   `}
 `;
 
-export const Side = styled.aside`
+export const FilterSidebar = styled.aside`
   display: grid;
   justify-content: center;
   padding: 15px;
@@ -26,6 +26,79 @@ export const Side = styled.aside`
       align-content: baseline;
     }
   `}
+
+  > nav {
+    > h4 {
+      margin-top: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* Checkbox */
+    > label {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      font-size: 22px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      width: 35px;
+      height: 35px;
+      font-size: 0.8em;
+      margin-bottom: 8px;
+      margin-right: 8px;
+      border-radius: 50%;
+      line-height: 35px;
+      text-align: center;
+
+      /* On mouse-over, add a border with the primary color */
+      &:hover input ~ .checkmark {
+        border: 1px solid ${({ theme }) => theme.colors.primary};
+      }
+
+      input:focus-visible ~ .checkmark {
+        box-sizing: border-box;
+        line-height: 30px;
+        border: 3px solid ${({ theme }) => theme.colors.secondary};
+      }
+
+      /* When the checkbox is checked, add the primary color to background */
+      & input:checked ~ .checkmark {
+        background-color: ${({ theme }) => theme.colors.primary};
+        color: #ececec;
+      }
+
+      /* Show the checkmark when checked */
+      & input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 35px;
+        height: 35px;
+        font-size: 0.8em;
+        border-radius: 50%;
+        box-sizing: border-box;
+        line-height: 35px;
+        text-align: center;
+        color: ${({ theme }) => theme.colors.primary};
+        background-color: #ececec;
+
+        border: 1px solid transparent;
+      }
+    }
+  }
 `;
 
 export const MainHeader = styled.main`
@@ -33,79 +106,6 @@ export const MainHeader = styled.main`
   grid-template-columns: 1fr 1fr;
   justify-content: end;
   padding: 0 15px;
-`;
-
-export const FilterWrapper = styled.div`
-  > h4 {
-    margin-top: 2px;
-    margin-bottom: 20px;
-  }
-
-  /* Checkbox */
-  > label {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    width: 35px;
-    height: 35px;
-    font-size: 0.8em;
-    margin-bottom: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-    line-height: 35px;
-    text-align: center;
-
-    /* On mouse-over, add a border with the primary color */
-    &:hover input ~ .checkmark {
-      border: 1px solid ${({ theme }) => theme.colors.primary};
-    }
-
-    input:focus-visible ~ .checkmark {
-      box-sizing: border-box;
-      line-height: 30px;
-      border: 3px solid ${({ theme }) => theme.colors.secondary};
-    }
-
-    /* When the checkbox is checked, add the primary color to background */
-    & input:checked ~ .checkmark {
-      background-color: ${({ theme }) => theme.colors.primary};
-      color: #ececec;
-    }
-
-    /* Show the checkmark when checked */
-    & input:checked ~ .checkmark:after {
-      display: block;
-    }
-
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    /* Create a custom checkbox */
-    .checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 35px;
-      height: 35px;
-      font-size: 0.8em;
-      border-radius: 50%;
-      box-sizing: border-box;
-      line-height: 35px;
-      text-align: center;
-      color: ${({ theme }) => theme.colors.primary};
-      background-color: #ececec;
-
-      border: 1px solid transparent;
-    }
-  }
 `;
 
 export const ProductsWrapper = styled.div`
@@ -275,8 +275,8 @@ export const Stopper = styled.div`
 `;
 
 export const CartIconWrapper = styled.figure`
-  ${({ theme, large }) => css`
-    ${size(large ? "60px" : "50px")};
+  ${({ theme, isLarge }) => css`
+    ${size(isLarge ? "60px" : "50px")};
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -305,10 +305,10 @@ export const CartIconWrapper = styled.figure`
 `;
 
 export const StyledCart = styled.div.withConfig({
-  shouldForwardProp: prop => !["isOpen"].includes(prop),
+  shouldForwardProp: prop => !["isCartOpen"].includes(prop),
 })`
-  ${({ isOpen, theme }) => css`
-    ${position("fixed", 0, isOpen ? 0 : "-100%", null, null)};
+  ${({ isCartOpen, theme }) => css`
+    ${position("fixed", 0, isCartOpen ? 0 : "-100%", null, null)};
     ${size("100%")};
     background-color: ${theme.colors.primary};
     box-sizing: border-box;
@@ -317,12 +317,12 @@ export const StyledCart = styled.div.withConfig({
 
     @media only screen and (min-width: ${theme.breakpoints.tablet}) {
       width: 450px;
-      right: ${isOpen ? "0" : "-450px"};
+      right: ${isCartOpen ? "0" : "-450px"};
     }
 
     > button {
       ${size("50px")};
-      ${position("absolute", 0, null, null, isOpen ? "0" : "-50px")};
+      ${position("absolute", 0, null, null, isCartOpen ? "0" : "-50px")};
       border: 0;
       padding: 0;
       color: #ececec;

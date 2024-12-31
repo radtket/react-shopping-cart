@@ -1,11 +1,11 @@
 import { isEmpty } from "lodash";
-import { useCallback, useState } from "react";
+import PropTypes from "prop-types";
+import { useCallback } from "react";
 import { formatPrice } from "../utils";
 
 import { CartIconWrapper, StyledCart } from "../styles/styled-components";
 
-function Cart() {
-  const [isOpen, setOpen] = useState(false);
+function Cart({ isCartOpen, onClick }) {
   const {
     productQuantity,
     currencyFormat,
@@ -52,8 +52,8 @@ function Cart() {
   ];
 
   const CartIcon = useCallback(
-    ({ large }) => (
-      <CartIconWrapper large={large}>
+    ({ isLarge }) => (
+      <CartIconWrapper isLarge={isLarge}>
         <span title="Products in cart quantity">{productQuantity}</span>
       </CartIconWrapper>
     ),
@@ -61,20 +61,15 @@ function Cart() {
   );
 
   return (
-    <StyledCart isOpen={isOpen}>
-      <button
-        type="button"
-        onClick={() => {
-          setOpen(prev => !prev);
-        }}
-      >
-        {isOpen ? <span>X</span> : <CartIcon />}
+    <StyledCart isCartOpen={isCartOpen}>
+      <button type="button" onClick={onClick}>
+        {isCartOpen ? <span>X</span> : <CartIcon />}
       </button>
 
-      {isOpen && (
+      {isCartOpen && (
         <div>
           <header>
-            <CartIcon large />
+            <CartIcon isLarge />
             <span>Cart</span>
           </header>
           <ul>
@@ -145,4 +140,10 @@ function Cart() {
     </StyledCart>
   );
 }
+
+Cart.propTypes = {
+  isCartOpen: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
 export default Cart;

@@ -1,21 +1,15 @@
-import { useEffect } from "react";
-import { useProducts } from "../context/products";
+import { size } from "lodash";
+import PropTypes from "prop-types";
 import { ProductsWrapper } from "../styles/styled-components";
 import Product from "./Product";
 
-function Products() {
-  const { products, fetchProducts } = useProducts();
-
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
+function Products({ products }) {
   return (
     <ProductsWrapper>
       <div>
-        <h2>{products?.length} Product(s) found</h2>
+        <h2>{size(products)} Product(s) found</h2>
         <main>
-          {(products || []).map(p => (
+          {products.map(p => (
             <Product key={p.sku} product={p} />
           ))}
         </main>
@@ -23,5 +17,9 @@ function Products() {
     </ProductsWrapper>
   );
 }
+
+Products.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+};
 
 export default Products;
