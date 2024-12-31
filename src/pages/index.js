@@ -1,9 +1,10 @@
-import Products from "@/components/Products";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
 import "normalize.css/normalize.css";
 import { ThemeProvider } from "styled-components";
+import Cart from "../components/Cart";
 import Filter from "../components/Filter";
+import Products from "../components/Products";
 import { CartProvider } from "../context/cart";
 import { ProductsProvider } from "../context/products";
 import StyledComponentsRegistry, {
@@ -38,6 +39,7 @@ function Home() {
                 </Side>
                 <Products />
               </TwoColumnGrid>
+              <Cart />
             </div>
           </ThemeProvider>
         </CartProvider>
