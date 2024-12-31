@@ -47,7 +47,7 @@ export function ProductsProvider(props) {
 
 const getProducts = () =>
   new Promise(resolve => {
-    resolve(MOCK_DATA);
+    resolve(MOCK_DATA.data.products);
   });
 
 export const useProducts = () => {

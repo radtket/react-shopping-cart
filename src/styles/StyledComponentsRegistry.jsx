@@ -6,12 +6,10 @@ import { useRef } from "react";
 import {
   ServerStyleSheet,
   StyleSheetManager,
-  ThemeProvider,
   createGlobalStyle,
 } from "styled-components";
-import theme from "./theme";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -39,8 +37,7 @@ export default function StyledComponentsRegistry({ children }) {
 
   return (
     <StyleSheetManager sheet={styledComponentsStyleSheet.current.instance}>
-      <GlobalStyle />
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      {children}
     </StyleSheetManager>
   );
 }
