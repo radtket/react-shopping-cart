@@ -68,7 +68,7 @@ function Cart({
           <ul>
             {isEmpty(items) ? (
               <li className="cart-item--empty">
-                Add some products in the cart <br />:
+                Add some products in the cart
               </li>
             ) : (
               items.map(
