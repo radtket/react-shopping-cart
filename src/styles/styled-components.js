@@ -175,7 +175,7 @@ export const StyledProduct = styled.article.withConfig({
     position: relative;
 
     ${({ sku }) => css`
-      background-image: url("/products/${sku}-1-product.webp");
+      background-image: url("/react-shopping-cart/products/${sku}-1-product.webp");
 
       background-repeat: no-repeat;
       background-size: cover;
@@ -202,7 +202,7 @@ export const StyledProduct = styled.article.withConfig({
   &:hover {
     figure {
       ${({ sku }) => css`
-        background-image: url("/products/${sku}-2-product.webp");
+        background-image: url("/react-shopping-cart/products/${sku}-2-product.webp");
       `}
     }
 

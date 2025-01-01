@@ -99,7 +99,10 @@ function Cart({
                     >
                       X
                     </button>
-                    <img alt={title} src={`/products/${sku}-1-cart.webp`} />
+                    <img
+                      alt={title}
+                      src={`/react-shopping-cart/products/${sku}-1-cart.webp`}
+                    />
                     <dl>
                       <dt>{title}</dt>
                       <dd>
