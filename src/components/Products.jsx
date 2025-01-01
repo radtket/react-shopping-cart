@@ -18,8 +18,9 @@ function Products({ products, setState }) {
               handleAddProduct={() => {
                 setState(prev => {
                   const cart = updateCartTotal(prev.cart, p);
+                  cart.isCartOpen = true;
 
-                  return { ...prev, isCartOpen: true, cart };
+                  return { ...prev, cart };
                 });
               }}
             />

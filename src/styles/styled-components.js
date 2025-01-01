@@ -16,89 +16,89 @@ export const TwoColumnGrid = styled.main`
 `;
 
 export const FilterSidebar = styled.aside`
-  display: grid;
-  justify-content: center;
-  padding: 15px;
-  box-sizing: border-box;
+  ${({ theme: { breakpoints, colors } }) => css`
+    display: grid;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
 
-  ${({ theme: { breakpoints } }) => css`
     @media only screen and (min-width: ${breakpoints.tablet}) {
       align-content: baseline;
     }
-  `}
 
-  > nav {
-    > h4 {
-      margin-top: 2px;
-      margin-bottom: 20px;
-    }
-
-    /* Checkbox */
-    > label {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      font-size: 22px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      width: 35px;
-      height: 35px;
-      font-size: 0.8em;
-      margin-bottom: 8px;
-      margin-right: 8px;
-      border-radius: 50%;
-      line-height: 35px;
-      text-align: center;
-
-      /* On mouse-over, add a border with the primary color */
-      &:hover input ~ .checkmark {
-        border: 1px solid ${({ theme }) => theme.colors.primary};
+    > nav {
+      > h4 {
+        margin-top: 2px;
+        margin-bottom: 20px;
       }
 
-      input:focus-visible ~ .checkmark {
-        box-sizing: border-box;
-        line-height: 30px;
-        border: 3px solid ${({ theme }) => theme.colors.secondary};
-      }
-
-      /* When the checkbox is checked, add the primary color to background */
-      & input:checked ~ .checkmark {
-        background-color: ${({ theme }) => theme.colors.primary};
-        color: #ececec;
-      }
-
-      /* Show the checkmark when checked */
-      & input:checked ~ .checkmark:after {
-        display: block;
-      }
-
-      input {
-        position: absolute;
-        opacity: 0;
+      /* Checkbox */
+      > label {
+        display: inline-block;
+        position: relative;
         cursor: pointer;
-      }
-
-      /* Create a custom checkbox */
-      .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         width: 35px;
         height: 35px;
         font-size: 0.8em;
+        margin-bottom: 8px;
+        margin-right: 8px;
         border-radius: 50%;
-        box-sizing: border-box;
         line-height: 35px;
         text-align: center;
-        color: ${({ theme }) => theme.colors.primary};
-        background-color: #ececec;
 
-        border: 1px solid transparent;
+        /* On mouse-over, add a border with the primary color */
+        &:hover input ~ .checkmark {
+          border: 1px solid ${colors.primary};
+        }
+
+        input:focus-visible ~ .checkmark {
+          box-sizing: border-box;
+          line-height: 30px;
+          border: 3px solid ${colors.secondary};
+        }
+
+        /* When the checkbox is checked, add the primary color to background */
+        & input:checked ~ .checkmark {
+          background-color: ${colors.primary};
+          color: ${colors.light};
+        }
+
+        /* Show the checkmark when checked */
+        & input:checked ~ .checkmark:after {
+          display: block;
+        }
+
+        input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        /* Create a custom checkbox */
+        .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 35px;
+          height: 35px;
+          font-size: 0.8em;
+          border-radius: 50%;
+          box-sizing: border-box;
+          line-height: 35px;
+          text-align: center;
+          color: ${colors.primary};
+          background-color: ${colors.light};
+
+          border: 1px solid transparent;
+        }
       }
     }
-  }
+  `}
 `;
 
 export const MainHeader = styled.main`
@@ -152,7 +152,9 @@ export const BuyButton = styled.button`
   }
 `;
 
-export const StyledProduct = styled.article`
+export const StyledProduct = styled.article.withConfig({
+  shouldForwardProp: prop => !["sku"].includes(prop),
+})`
   position: relative;
   text-align: center;
   box-sizing: border-box;
@@ -184,7 +186,7 @@ export const StyledProduct = styled.article`
       content: "";
       display: block;
       position: absolute;
-      background: #eee;
+      background: ${({ theme }) => theme.colors.light};
       width: 100%;
       height: 100%;
       z-index: -1;
@@ -213,6 +215,7 @@ export const StyledProduct = styled.article`
     dt {
       position: relative;
       padding: 0 20px;
+      margin: 16px auto;
       height: 45px;
 
       &::before {
@@ -228,13 +231,19 @@ export const StyledProduct = styled.article`
     }
 
     dd {
-      height: 60px;
+      margin-left: 0;
 
-      .val {
+      &:nth-of-type(1) {
         b {
           font-size: 1.5em;
           margin-left: 5px;
+          line-height: 1;
         }
+      }
+
+      &:nth-of-type(2) {
+        margin: 0px;
+        color: rgb(156, 155, 155);
       }
     }
   }
@@ -259,19 +268,21 @@ export const Val = styled.p`
 `;
 export const Installment = styled.p`
   margin: 0;
-  color: #9c9b9b;
+  color: ${({ theme }) => theme.colors.gray[800]};
 `;
 
 export const Stopper = styled.div`
-  position: absolute;
-  color: #ececec;
-  top: 10px;
-  right: 10px;
-  padding: 5px;
-  font-size: 0.6em;
-  background-color: ${({ theme }) => theme.colors.primary};
-  cursor: default;
-  z-index: 1;
+  ${({ theme }) => css`
+    position: absolute;
+    color: ${theme.colors.light};
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    font-size: 0.6em;
+    background-color: ${theme.colors.primary};
+    cursor: default;
+    z-index: 1;
+  `}
 `;
 
 export const CartIconWrapper = styled.figure.withConfig({
@@ -293,7 +304,7 @@ export const CartIconWrapper = styled.figure.withConfig({
       ${size("18px")};
       line-height: 18px;
       display: inline-block;
-      color: #0c0b10;
+      color: ${theme.colors.dark[900]};
       font-weight: bold;
       font-size: 0.7em;
       text-align: center;
@@ -327,7 +338,7 @@ export const StyledCart = styled.div.withConfig({
       ${position("absolute", 0, null, null, isCartOpen ? "0" : "-50px")};
       border: 0;
       padding: 0;
-      color: #ececec;
+      color: ${theme.colors.light};
       background-color: ${theme.colors.primary};
       text-align: center;
       line-height: 50px;
@@ -363,12 +374,12 @@ export const StyledCart = styled.div.withConfig({
         }
         &::-webkit-scrollbar-thumb {
           border-radius: 4px;
-          background-color: #0c0b10;
+          background-color: ${theme.colors.dark[900]};
         }
       }
 
       header {
-        color: #ececec;
+        color: ${theme.colors.light};
         box-sizing: border-box;
         text-align: center;
         padding: 45px 0;
@@ -403,7 +414,7 @@ export const StyledCart = styled.div.withConfig({
 
         > p {
           width: 20%;
-          color: #5b5a5e;
+          color: ${theme.colors.gray[700]};
           vertical-align: middle;
           display: inline-block;
         }
@@ -411,7 +422,7 @@ export const StyledCart = styled.div.withConfig({
         dl {
           width: 80%;
           text-align: right;
-          color: #5b5a5e;
+          color: ${theme.colors.gray[700]};
           vertical-align: middle;
           display: inline-block;
           margin: 0;
@@ -430,9 +441,9 @@ export const StyledCart = styled.div.withConfig({
         button {
           width: 100%;
           border: 0;
-          color: #ececec;
+          color: ${theme.colors.light};
           text-transform: uppercase;
-          background-color: #0c0b10;
+          background-color: ${theme.colors.dark[900]};
           text-align: center;
           padding: 15px 0;
           margin-top: 40px;
@@ -446,7 +457,7 @@ export const StyledCart = styled.div.withConfig({
           }
 
           &:hover {
-            background-color: #000;
+            background-color: ${theme.colors.black};
           }
         }
       }
@@ -457,7 +468,7 @@ export const StyledCart = styled.div.withConfig({
         padding: 0 0 200px 0;
 
         > li.cart-item--empty {
-          color: #ececec;
+          color: ${theme.colors.light};
           text-align: center;
           line-height: 40px;
         }
@@ -520,12 +531,12 @@ export const StyledCart = styled.div.withConfig({
             vertical-align: middle;
 
             dt {
-              color: #ececec;
+              color: ${theme.colors.light};
               margin: 0;
             }
 
             dd {
-              color: #5b5a5e;
+              color: ${theme.colors.gray[700]};};
               margin: 0;
             }
           }
@@ -539,9 +550,9 @@ export const StyledCart = styled.div.withConfig({
 
             nav {
               button {
-                color: #b7b7b7;
+                color: ${theme.colors.gray[600]};
                 border: 0;
-                background-color: #000;
+                background-color: ${theme.colors.black};}
                 width: 25px;
                 height: 25px;
 
@@ -562,102 +573,104 @@ export const StyledCart = styled.div.withConfig({
 `;
 
 export const CartItems = styled.ul`
-  position: relative;
-  min-height: 280px;
-  padding-bottom: 200px;
-
-  > li {
+  ${({ theme }) => css`
     position: relative;
-    box-sizing: border-box;
-    padding: 5%;
+    min-height: 280px;
+    padding-bottom: 200px;
 
-    transition:
-      background-color 0.2s,
-      opacity 0.2s;
+    > li {
+      position: relative;
+      box-sizing: border-box;
+      padding: 5%;
 
-    &::before {
-      content: "";
-      width: 90%;
-      height: 2px;
-      background-color: rgba(0, 0, 0, 0.2);
-      position: absolute;
-      top: 0;
-      left: 5%;
-    }
+      transition:
+        background-color 0.2s,
+        opacity 0.2s;
 
-    /* Delete Button */
-    > button {
-      width: 16px;
-      height: 16px;
-      top: 15px;
-      right: 5%;
-      border-radius: 50%;
-      position: absolute;
-      background-size: auto 100%;
-      background-image: url("/delete-icon.png");
-      background-repeat: no-repeat;
-      z-index: 2;
-      cursor: pointer;
-      border: 0;
-      background-color: transparent;
-
-      &:focus-visible {
-        outline: 3px solid ${({ theme }) => theme.colors.secondary};
+      &::before {
+        content: "";
+        width: 90%;
+        height: 2px;
+        background-color: rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: 0;
+        left: 5%;
       }
 
-      &:hover {
-        background-position-x: -17px;
+      /* Delete Button */
+      > button {
+        width: 16px;
+        height: 16px;
+        top: 15px;
+        right: 5%;
+        border-radius: 50%;
+        position: absolute;
+        background-size: auto 100%;
+        background-image: url("/delete-icon.png");
+        background-repeat: no-repeat;
+        z-index: 2;
+        cursor: pointer;
+        border: 0;
+        background-color: transparent;
+
+        &:focus-visible {
+          outline: 3px solid ${theme.colors.secondary};
+        }
+
+        &:hover {
+          background-position-x: -17px;
+        }
       }
-    }
 
-    > img {
-      display: inline-block;
-      vertical-align: middle;
-      width: 15%;
-      height: auto;
-      margin-right: 3%;
-    }
-
-    > dl {
-      width: 57%;
-      display: inline-block;
-      vertical-align: middle;
-
-      dt {
-        color: #ececec;
-        margin: 0;
+      > img {
+        display: inline-block;
+        vertical-align: middle;
+        width: 15%;
+        height: auto;
+        margin-right: 3%;
       }
 
-      dd {
-        color: #5b5a5e;
-        margin: 0;
+      > dl {
+        width: 57%;
+        display: inline-block;
+        vertical-align: middle;
+
+        dt {
+          color: ${theme.colors.light};
+          margin: 0;
+        }
+
+        dd {
+          color: ${theme.colors.gray[700]};
+          margin: 0;
+        }
       }
-    }
 
-    > div {
-      display: inline-block;
-      vertical-align: middle;
-      color: ${({ theme }) => theme.colors.secondary};
-      text-align: right;
-      width: 25%;
+      > div {
+        display: inline-block;
+        vertical-align: middle;
+        color: ${theme.colors.secondary};
+        text-align: right;
+        width: 25%;
 
-      nav {
-        button {
-          color: #b7b7b7;
-          border: 0;
-          background-color: #000;
-          width: 25px;
-          height: 25px;
+        nav {
+          button {
+            color: ${theme.colors.gray[600]};
+            border: 0;
+            background-color: ${theme.colors.black};
+            width: 25px;
+            height: 25px;
 
-          &:focus-visible {
-            outline: 3px solid ${({ theme }) => theme.colors.secondary};
-          }
+            &:focus-visible {
+              outline: 3px solid ${theme.colors.secondary};
+            }
 
-          &:disabled {
-            opacity: 0.2;
+            &:disabled {
+              opacity: 0.2;
+            }
           }
         }
       }
     }
-  }
+  `}
 `;

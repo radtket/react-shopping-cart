@@ -1,28 +1,20 @@
 import { isEmpty } from "lodash";
 import PropTypes from "prop-types";
 import { useCallback } from "react";
-import { formatPrice } from "../utils";
+import { formatPrice, updateCartTotal } from "../utils";
 
 import { CartIconWrapper, StyledCart } from "../styles/styled-components";
 
-const initalState = {
-  productQuantity: 0,
-  installments: 0,
-  totalPrice: 0,
-  currencyId: "USD",
-  currencyFormat: "$",
-};
-
-function Cart({ isCartOpen, setState, cart }) {
-  const {
-    productQuantity,
-    installments,
-    totalPrice,
-    currencyId,
-    currencyFormat,
-    items,
-  } = cart;
-
+function Cart({
+  currencyFormat,
+  currencyId,
+  installments,
+  isCartOpen,
+  items,
+  productQuantity,
+  setState,
+  totalPrice,
+}) {
   const CartIcon = useCallback(
     ({ isLarge }) => (
       <CartIconWrapper isLarge={isLarge}>
@@ -32,12 +24,36 @@ function Cart({ isCartOpen, setState, cart }) {
     [productQuantity]
   );
 
+  const getUpdatedProducts = useCallback(
+    (id, isIncrease) => {
+      setState(prev => ({
+        ...prev,
+        cart: updateCartTotal({
+          ...prev.cart,
+          items: prev.cart.items.map(p =>
+            p.id === id
+              ? {
+                  ...p,
+                  quantity: isIncrease ? p.quantity + 1 : p.quantity - 1,
+                }
+              : p
+          ),
+        }),
+      }));
+    },
+    [setState]
+  );
+
   return (
     <StyledCart isCartOpen={isCartOpen}>
       <button
         type="button"
         onClick={() => {
-          setState(prev => ({ ...prev, isCartOpen: !prev.isCartOpen }));
+          setState(prev => {
+            const copy = { ...prev };
+            copy.cart.isCartOpen = !copy.cart.isCartOpen;
+            return copy;
+          });
         }}
       >
         {isCartOpen ? <span>X</span> : <CartIcon />}
@@ -55,8 +71,8 @@ function Cart({ isCartOpen, setState, cart }) {
                 Add some products in the cart <br />:
               </li>
             ) : (
-              items.map(p => {
-                const {
+              items.map(
+                ({
                   title,
                   sku,
                   availableSizes,
@@ -64,25 +80,20 @@ function Cart({ isCartOpen, setState, cart }) {
                   quantity,
                   price,
                   id,
-                } = p;
-
-                return (
+                }) => (
                   <li key={sku} className="cart-item">
                     <button
-                      // onClick={() => {
-                      //   setState(prev => ({
-                      //     ...prev,
-                      //     cart: updateCartTotal(
-                      //       {
-                      //         ...prev.cart,
-                      //         items: prev.cart.items.filter(
-                      //           product => product.id !== id
-                      //         ),
-                      //       },
-                      //       p
-                      //     ),
-                      //   }));
-                      // }}
+                      onClick={() => {
+                        setState(prev => ({
+                          ...prev,
+                          cart: updateCartTotal({
+                            ...prev.cart,
+                            items: prev.cart.items.filter(
+                              product => product.id !== id
+                            ),
+                          }),
+                        }));
+                      }}
                       type="button"
                       title="remove product from cart"
                     >
@@ -101,19 +112,26 @@ function Cart({ isCartOpen, setState, cart }) {
                       <nav>
                         <button
                           type="button"
-                          onClick={() => {}}
+                          onClick={() => {
+                            getUpdatedProducts(id);
+                          }}
                           disabled={quantity === 1}
                         >
                           -
                         </button>
-                        <button type="button" onClick={() => {}}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            getUpdatedProducts(id, true);
+                          }}
+                        >
                           +
                         </button>
                       </nav>
                     </div>
                   </li>
-                );
-              })
+                )
+              )
             )}
           </ul>
 
@@ -142,16 +160,14 @@ function Cart({ isCartOpen, setState, cart }) {
 }
 
 Cart.propTypes = {
+  currencyFormat: PropTypes.string.isRequired,
+  currencyId: PropTypes.string.isRequired,
+  installments: PropTypes.number.isRequired,
   isCartOpen: PropTypes.bool.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  productQuantity: PropTypes.number.isRequired,
   setState: PropTypes.func.isRequired,
-  cart: PropTypes.shape({
-    productQuantity: PropTypes.number,
-    installments: PropTypes.number,
-    totalPrice: PropTypes.number,
-    currencyId: PropTypes.string,
-    currencyFormat: PropTypes.string,
-    items: PropTypes.arrayOf(PropTypes.shape({})),
-  }).isRequired,
+  totalPrice: PropTypes.number.isRequired,
 };
 
 export default Cart;

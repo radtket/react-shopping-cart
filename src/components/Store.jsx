@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { isEmpty } from "lodash";
 import { TwoColumnGrid } from "../styles/styled-components";
 import Cart from "./Cart";
 import Filter from "./Filter";
 import Products from "./Products";
 
-const products = [
+const data = [
   {
     availableSizes: ["X", "L", "XL", "XXL"],
     currencyFormat: "$",
@@ -217,10 +218,10 @@ const products = [
 
 function Store() {
   const [state, setState] = useState({
-    products,
+    products: data,
     filters: [],
-    isCartOpen: false,
     cart: {
+      isCartOpen: false,
       productQuantity: 0,
       installments: 0,
       totalPrice: 0,
@@ -230,25 +231,37 @@ function Store() {
     },
   });
 
+  const { filters, products, cart } = state;
   return (
     <>
       <TwoColumnGrid>
         <Filter
           setState={setState}
-          filters={state.filters}
+          filters={filters}
           onChange={({ target }) => {
-            setState(prev => ({
-              ...prev,
-              filters: prev.filters.includes(target.value)
+            setState(prev => {
+              const copy = { ...prev };
+
+              copy.filters = prev.filters.includes(target.value)
                 ? prev.filters.filter(size => size !== target.value)
-                : [...prev.filters, target.value],
-            }));
+                : [...prev.filters, target.value];
+
+              copy.products = isEmpty(copy.filters)
+                ? data
+                : data.filter(product =>
+                    product.availableSizes.some(size =>
+                      copy.filters.includes(size)
+                    )
+                  );
+
+              return copy;
+            });
           }}
         />
 
-        <Products products={state.products} setState={setState} />
+        <Products products={products} setState={setState} />
       </TwoColumnGrid>
-      <Cart {...state} setState={setState} />
+      <Cart {...{ ...cart, setState }} />
     </>
   );
 }

@@ -9,18 +9,21 @@ export const formatPrice = ({ price, currencyId }) => {
 
 export const updateCartTotal = (cart, p) => {
   const copy = { ...cart };
-  const productIndex = copy.items.findIndex(({ id }) => id === p.id);
 
-  if (productIndex === -1) {
-    copy.items.push({ ...p, quantity: 1 });
-  } else {
-    copy.items = copy.items.map(product => {
-      if (product.id === p.id) {
-        return { ...product, quantity: product.quantity + 1 };
-      }
+  if (p) {
+    const productIndex = copy.items.findIndex(({ id }) => id === p.id);
 
-      return product;
-    });
+    if (productIndex === -1) {
+      copy.items.push({ ...p, quantity: 1 });
+    } else {
+      copy.items = copy.items.map(product => {
+        if (product.id === p.id) {
+          return { ...product, quantity: product.quantity + 1 };
+        }
+
+        return product;
+      });
+    }
   }
 
   return copy.items.reduce(
