@@ -97,7 +97,7 @@ function Cart({
                       type="button"
                       title="remove product from cart"
                     >
-                      X
+                      <span>X</span>
                     </button>
                     <img
                       alt={title}

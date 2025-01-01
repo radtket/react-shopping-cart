@@ -1,4 +1,4 @@
-import { position, size } from "polished";
+import { hideVisually, position, size } from "polished";
 import styled, { css } from "styled-components";
 
 export const TwoColumnGrid = styled.main`
@@ -34,6 +34,7 @@ export const FilterSidebar = styled.aside`
 
       /* Checkbox */
       > label {
+        ${size("35px")};
         display: inline-block;
         position: relative;
         cursor: pointer;
@@ -42,8 +43,6 @@ export const FilterSidebar = styled.aside`
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        width: 35px;
-        height: 35px;
         font-size: 0.8em;
         margin-bottom: 8px;
         margin-right: 8px;
@@ -81,11 +80,10 @@ export const FilterSidebar = styled.aside`
 
         /* Create a custom checkbox */
         .checkmark {
+          ${size("35px")};
           position: absolute;
           top: 0;
           left: 0;
-          width: 35px;
-          height: 35px;
           font-size: 0.8em;
           border-radius: 50%;
           box-sizing: border-box;
@@ -168,10 +166,9 @@ export const StyledProduct = styled.article.withConfig({
   }
 
   figure {
+    ${size("270px", "100%")};
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 270px;
     position: relative;
 
     ${({ sku }) => css`
@@ -183,12 +180,11 @@ export const StyledProduct = styled.article.withConfig({
     `}
 
     &::before {
+      ${size("100%")};
       content: "";
       display: block;
       position: absolute;
       background: ${({ theme }) => theme.colors.light};
-      width: 100%;
-      height: 100%;
       z-index: -1;
     }
 
@@ -219,9 +215,8 @@ export const StyledProduct = styled.article.withConfig({
       height: 45px;
 
       &::before {
+        ${size("2px", "20px")};
         content: "";
-        width: 20px;
-        height: 2px;
         background-color: ${({ theme }) => theme.colors.secondary};
         position: absolute;
         bottom: 0;
@@ -294,7 +289,7 @@ export const CartIconWrapper = styled.figure.withConfig({
     display: inline-block;
     vertical-align: middle;
     margin: 0 15px 0 0;
-    background-image: url("/cart-icon.png");
+    background-image: url("/react-shopping-cart/cart-icon.png");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -392,19 +387,17 @@ export const StyledCart = styled.div.withConfig({
       }
 
       footer {
+        ${size("200px", "100%")};
         box-sizing: border-box;
         padding: 5%;
         position: absolute;
         bottom: 0;
-        width: 100%;
-        height: 200px;
         z-index: 2;
         background-color: ${theme.colors.primary};
 
         &::before {
+          ${size("20px", "100%")};
           content: "";
-          width: 100%;
-          height: 20px;
           display: block;
           position: absolute;
           top: -20px;
@@ -483,9 +476,8 @@ export const StyledCart = styled.div.withConfig({
             opacity 0.2s;
 
           &::before {
+            ${size("2px", "90%")};
             content: "";
-            width: 90%;
-            height: 2px;
             background-color: rgba(0, 0, 0, 0.2);
             position: absolute;
             top: 0;
@@ -494,14 +486,13 @@ export const StyledCart = styled.div.withConfig({
 
           /* Delete Button */
           > button {
-            width: 16px;
-            height: 16px;
+            ${size("16px")};
             top: 15px;
             right: 5%;
             border-radius: 50%;
             position: absolute;
             background-size: auto 100%;
-            background-image: url("/delete-icon.png");
+            background-image: url("/react-shopping-cart/delete-icon.png");
             background-repeat: no-repeat;
             z-index: 2;
             cursor: pointer;
@@ -515,13 +506,16 @@ export const StyledCart = styled.div.withConfig({
             &:hover {
               background-position-x: -17px;
             }
+            span {
+              ${hideVisually()}
+            }
           }
 
           > img {
+            ${size("auto", "15%")};
             display: inline-block;
             vertical-align: middle;
-            width: 15%;
-            height: auto;
+
             margin-right: 3%;
           }
 
@@ -536,8 +530,8 @@ export const StyledCart = styled.div.withConfig({
             }
 
             dd {
-              color: ${theme.colors.gray[700]};};
-              margin: 0;
+              color: #5b5a5e;
+              margin-left: 0;
             }
           }
 
@@ -550,11 +544,10 @@ export const StyledCart = styled.div.withConfig({
 
             nav {
               button {
+                ${size("25px")};
                 color: ${theme.colors.gray[600]};
                 border: 0;
-                background-color: ${theme.colors.black};}
-                width: 25px;
-                height: 25px;
+                background-color: ${theme.colors.black};
 
                 &:focus-visible {
                   outline: 3px solid ${theme.colors.secondary};
@@ -564,109 +557,6 @@ export const StyledCart = styled.div.withConfig({
                   opacity: 0.2;
                 }
               }
-            }
-          }
-        }
-      }
-    }
-  `}
-`;
-
-export const CartItems = styled.ul`
-  ${({ theme }) => css`
-    position: relative;
-    min-height: 280px;
-    padding-bottom: 200px;
-
-    > li {
-      position: relative;
-      box-sizing: border-box;
-      padding: 5%;
-
-      transition:
-        background-color 0.2s,
-        opacity 0.2s;
-
-      &::before {
-        content: "";
-        width: 90%;
-        height: 2px;
-        background-color: rgba(0, 0, 0, 0.2);
-        position: absolute;
-        top: 0;
-        left: 5%;
-      }
-
-      /* Delete Button */
-      > button {
-        width: 16px;
-        height: 16px;
-        top: 15px;
-        right: 5%;
-        border-radius: 50%;
-        position: absolute;
-        background-size: auto 100%;
-        background-image: url("/delete-icon.png");
-        background-repeat: no-repeat;
-        z-index: 2;
-        cursor: pointer;
-        border: 0;
-        background-color: transparent;
-
-        &:focus-visible {
-          outline: 3px solid ${theme.colors.secondary};
-        }
-
-        &:hover {
-          background-position-x: -17px;
-        }
-      }
-
-      > img {
-        display: inline-block;
-        vertical-align: middle;
-        width: 15%;
-        height: auto;
-        margin-right: 3%;
-      }
-
-      > dl {
-        width: 57%;
-        display: inline-block;
-        vertical-align: middle;
-
-        dt {
-          color: ${theme.colors.light};
-          margin: 0;
-        }
-
-        dd {
-          color: ${theme.colors.gray[700]};
-          margin: 0;
-        }
-      }
-
-      > div {
-        display: inline-block;
-        vertical-align: middle;
-        color: ${theme.colors.secondary};
-        text-align: right;
-        width: 25%;
-
-        nav {
-          button {
-            color: ${theme.colors.gray[600]};
-            border: 0;
-            background-color: ${theme.colors.black};
-            width: 25px;
-            height: 25px;
-
-            &:focus-visible {
-              outline: 3px solid ${theme.colors.secondary};
-            }
-
-            &:disabled {
-              opacity: 0.2;
             }
           }
         }
